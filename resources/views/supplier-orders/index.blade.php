@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-6">
-            <form action="{{ route('suppliers.search') }}"
+            {{-- <form action="{{ route('suppliers.search') }}"
                   method="POST">
                 @csrf
                 <div class="input-group mb-3">
@@ -25,82 +25,62 @@
                         </span>
                     @enderror
                 </div>
-            </form>
+            </form> --}}
         </div>
         <div class="col-6">
             <div class="text-end mb-4">
-                <a href="{{ route('suppliers.create') }}"
+                <a href="{{ route('supplier-orders.create') }}"
                    class="btn btn-primary">Create</a>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-1 fw-bold">
+        <div class="col-2 fw-bold">
             ID
         </div>
         <div class="col-2 fw-bold">
             Supplier Name
         </div>
         <div class="col-2 fw-bold">
-            Email Address
+            Total Price
         </div>
         <div class="col-2 fw-bold">
-            Phone Number
+            Created At
         </div>
         <div class="col-2 fw-bold">
-            Address
-        </div>
-        <div class="col-3 fw-bold">
             Actions
         </div>
     </div>
     <hr>
 
-    @forelse ($suppliers as $supplier)
+    @forelse ($supplierOrders as $supplierOrder)
     <div class="row">
-        <div class="col-1">
-            {{ $supplier->id }}
+        <div class="col-2">
+            {{ $supplierOrder->id }}
         </div>
         <div class="col-2">
-            {{ $supplier->name }}
+            {{ $supplierOrder->supplier->name }}
         </div>
         <div class="col-2">
-            {{ $supplier->email }}
+            {{ $supplierOrder->total_price }}
         </div>
         <div class="col-2">
-            {{ $supplier->phone }}
+            {{ date('d/m/Y', strtotime($supplierOrder->created_at)) }}
         </div>
         <div class="col-2">
-            {{ $supplier->address }}
-        </div>
-        <div class="col-1">
-            <a href="{{ route('suppliers.products.index', $supplier->id) }}"
-               class="btn btn-success btn-sm">Products</a>
-        </div>
-        <div class="col-1">
-            <a href="{{ route('suppliers.edit', $supplier->id) }}"
-               class="btn btn-secondary btn-sm">Edit</a>
-        </div>
-        <div class="col-1">
-            <form action="{{ route('suppliers.destroy', $supplier->id) }}"
-                  method="POST">
-                @csrf
-                @method('DELETE')
-
-                <button type="submit"
-                        class="btn btn-danger btn-sm"
-                        onclick="return confirm('Are you sure?')">Delete</button>
-            </form>
+            <a href="{{ route('supplier-orders.show', $supplierOrder->id) }}">
+                View Order Details
+            </a>
         </div>
     </div>
     <hr>
     @empty
     <div class="alert alert-warning"
          role="alert">
-        No suppliers yet.
+        No supplier orders yet.
     </div>
     @endforelse
-    {{ $suppliers->withQueryString()->links() }}
+    {{ $supplierOrders->withQueryString()->links() }}
 </div>
 @endsection

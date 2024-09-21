@@ -6,3 +6,11 @@
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+
+.product-image {
+    border-radius: 8em;
+    width: 5em;
+    height: 5em;
+    object-fit: cover;
+    margin-right: 1em;
+}

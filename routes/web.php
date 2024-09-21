@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SupplierOrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
@@ -26,3 +28,12 @@ Route::post('customers/search', [CustomerController::class, 'search'])->name('cu
 // SUPPLIERS
 Route::resource('suppliers', SupplierController::class);
 Route::post('suppliers/search', [SupplierController::class, 'search'])->name('suppliers.search');
+
+// PRODUCTS
+Route::prefix('suppliers/{supplier}')->name('suppliers.')->group(function () {
+    Route::resource('/products', ProductController::class)->except(['show']);
+    Route::post('/products/search', [ProductController::class, 'search'])->name('products.search');
+});
+
+// SUPPLIER ORDERS
+Route::resource('supplier-orders', SupplierOrderController::class)->only(['index', 'create', 'show']);

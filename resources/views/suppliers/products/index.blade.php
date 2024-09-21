@@ -2,9 +2,12 @@
 
 @section('content')
 <div class="container">
+
+    @include('suppliers.products.partials.supplier-details')
+
     <div class="row">
         <div class="col-6">
-            <form action="{{ route('suppliers.search') }}"
+            <form action="{{ route('suppliers.products.search', $supplier->id) }}"
                   method="POST">
                 @csrf
                 <div class="input-group mb-3">
@@ -13,23 +16,23 @@
                             type="submit">🔍</button>
                     <input type="search"
                            class="form-control @error('search') is-invalid @enderror"
-                           placeholder="Search by supplier name, email address, phone or address..."
+                           placeholder="Search by product name..."
                            aria-describedby="search"
                            name="search"
                            value="{{ request('search', null) }}">
 
                     @error('search')
-                        <span class="invalid-feedback"
-                              role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                    <span class="invalid-feedback"
+                          role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
                     @enderror
                 </div>
             </form>
         </div>
         <div class="col-6">
             <div class="text-end mb-4">
-                <a href="{{ route('suppliers.create') }}"
+                <a href="{{ route('suppliers.products.create', $supplier->id) }}"
                    class="btn btn-primary">Create</a>
             </div>
         </div>
@@ -40,50 +43,56 @@
             ID
         </div>
         <div class="col-2 fw-bold">
-            Supplier Name
+            Product Name
+        </div>
+        <div class="col-1 fw-bold">
+            Category
         </div>
         <div class="col-2 fw-bold">
-            Email Address
+            Description
         </div>
         <div class="col-2 fw-bold">
-            Phone Number
+            Buy Price / Sell Price
         </div>
         <div class="col-2 fw-bold">
-            Address
+            Stock
         </div>
-        <div class="col-3 fw-bold">
+        <div class="col-2 fw-bold">
             Actions
         </div>
     </div>
     <hr>
 
-    @forelse ($suppliers as $supplier)
+    @forelse ($products as $product)
     <div class="row">
         <div class="col-1">
-            {{ $supplier->id }}
+            {{ $product->id }}
         </div>
         <div class="col-2">
-            {{ $supplier->name }}
-        </div>
-        <div class="col-2">
-            {{ $supplier->email }}
-        </div>
-        <div class="col-2">
-            {{ $supplier->phone }}
-        </div>
-        <div class="col-2">
-            {{ $supplier->address }}
+            @if ($product->image)
+                <img src="{{ asset($product->image) }}"
+                    class="product-image">
+            @endif
+            {{ $product->name }}
         </div>
         <div class="col-1">
-            <a href="{{ route('suppliers.products.index', $supplier->id) }}"
-               class="btn btn-success btn-sm">Products</a>
+            {{ $product->category->name }}
+        </div>
+        <div class="col-2">
+            {{ $product->description }}
+        </div>
+        <div class="col-2">
+            {{ $product->buy_price }} / {{ $product->sell_price }}
+        </div>
+        <div class="col-2">
+            {{ $product->stock }}
         </div>
         <div class="col-1">
-            <a href="{{ route('suppliers.edit', $supplier->id) }}"
+            <a href="{{ route('suppliers.products.edit', [$supplier->id, $product->id]) }}"
                class="btn btn-secondary btn-sm">Edit</a>
         </div>
         <div class="col-1">
-            <form action="{{ route('suppliers.destroy', $supplier->id) }}"
+            <form action="{{ route('suppliers.products.destroy', [$supplier->id, $product->id]) }}"
                   method="POST">
                 @csrf
                 @method('DELETE')
@@ -98,9 +107,9 @@
     @empty
     <div class="alert alert-warning"
          role="alert">
-        No suppliers yet.
+        No products yet.
     </div>
     @endforelse
-    {{ $suppliers->withQueryString()->links() }}
+    {{ $products->withQueryString()->links() }}
 </div>
 @endsection

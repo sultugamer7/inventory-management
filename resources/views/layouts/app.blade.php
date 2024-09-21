@@ -39,6 +39,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('suppliers.index') }}">Suppliers</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('supplier-orders.index') }}">Supplier Orders</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
