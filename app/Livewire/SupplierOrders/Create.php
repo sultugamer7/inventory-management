@@ -2,11 +2,13 @@
 
 namespace App\Livewire\SupplierOrders;
 
+use App\Mail\SupplierOrderCreatedMail;
 use App\Models\Product;
-use App\Models\SupplierOrder;
-use App\Models\SupplierOrderItem;
 use Livewire\Component;
 use App\Models\Supplier;
+use App\Models\SupplierOrder;
+use App\Models\SupplierOrderItem;
+use Illuminate\Support\Facades\Mail;
 
 class Create extends Component
 {
@@ -47,6 +49,8 @@ class Create extends Component
         unset($this->orderItems[$index]);
 
         $this->orderItems = array_values($this->orderItems);
+
+        $this->calculateOverallTotalPrice();
     }
 
     public function render()
@@ -72,6 +76,11 @@ class Create extends Component
     {
         $this->orderItems[$index]['total_price'] = $this->orderItems[$index]['unit_price'] * $this->orderItems[$index]['quantity'];
 
+        $this->calculateOverallTotalPrice();
+    }
+
+    public function calculateOverallTotalPrice()
+    {
         $this->totalPrice = array_sum(array_column($this->orderItems, 'total_price'));
     }
 
@@ -100,6 +109,8 @@ class Create extends Component
         }
 
         // Email
+        $supplier = Supplier::find($this->selectedSupplierID);
+        Mail::to($supplier->email)->send(new SupplierOrderCreatedMail($supplierOrder));
 
         return redirect()->route('supplier-orders.index');
     }

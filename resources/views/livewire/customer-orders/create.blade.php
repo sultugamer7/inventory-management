@@ -1,20 +1,19 @@
 <div>
     <form wire:submit="save">
-        {{-- Supplier --}}
+        {{-- Customer --}}
         <div class="mb-3">
-            <label for="supplier_id"
-                   class="form-label">Supplier</label>
-            <select class="form-control @error('selectedSupplierID') is-invalid @enderror"
-                    id="supplier_id"
-                    wire:model="selectedSupplierID"
-                    wire:change="populateProducts">
-                <option value="">[Select a Supplier]</option>
-                @foreach ($suppliers as $supplier)
-                <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+            <label for="customer_id"
+                   class="form-label">Customer</label>
+            <select class="form-control @error('selectedCustomerID') is-invalid @enderror"
+                    id="customer_id"
+                    wire:model="selectedCustomerID">
+                <option value="">[Select a Customer]</option>
+                @foreach ($customers as $customer)
+                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                 @endforeach
             </select>
 
-            @error('selectedSupplierID')
+            @error('selectedCustomerID')
             <span class="invalid-feedback"
                   role="alert">
                 <strong>{{ $message }}</strong>
@@ -28,16 +27,39 @@
             @foreach ($orderItems as $index => $orderItem)
             <div class="row">
                 <div class="col-3">
+                    {{-- Supplier --}}
+                    <div class="mb-3">
+                        <label for="supplier_id"
+                               class="form-label">{{$index+1}}. Supplier</label>
+                        <select class="form-control @error('orderItems.'.$index.'.supplier_id') is-invalid @enderror"
+                                id="supplier_id"
+                                wire:model="orderItems.{{ $index }}.supplier_id"
+                                wire:change="populateProducts('{{ $index }}')">
+                            <option value="">[Select a Supplier]</option>
+                            @foreach ($suppliers as $supplier)
+                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                            @endforeach
+                        </select>
+
+                        @error('orderItems.'.$index.'.supplier_id')
+                        <span class="invalid-feedback"
+                              role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-2">
                     {{-- Product --}}
                     <div class="mb-3">
                         <label for="product_id"
-                               class="form-label">{{$index+1}}. Product</label>
+                               class="form-label">Product</label>
                         <select class="form-control @error('orderItems.'.$index.'.product_id') is-invalid @enderror"
                                 id="product_id"
                                 wire:model="orderItems.{{ $index }}.product_id"
-                                wire:change="setUnitPriceAndCalculateTotalPrice('{{ $index }}')">
+                                wire:change="setStockAndUnitPriceAndCalculateTotalPrice('{{ $index }}')">
                             <option value="">[Select a Product]</option>
-                            @foreach ($products as $product)
+                            @foreach ($orderItem['products'] as $product)
                             <option value="{{ $product->id }}">{{ $product->name }}</option>
                             @endforeach
                         </select>
@@ -50,7 +72,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     {{-- Unit Price --}}
                     <div class="mb-3">
                         <label for="unitPrice"
@@ -80,7 +102,8 @@
                                id="quantity"
                                wire:model="orderItems.{{ $index }}.quantity"
                                wire:change="calculateTotalPrice('{{ $index }}')"
-                               placeholder="Quantity">
+                               placeholder="Quantity"
+                               max="{{ $orderItem['stock'] }}">
 
                         @error('orderItems.'.$index.'.quantity')
                         <span class="invalid-feedback"
@@ -90,7 +113,7 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     {{-- Total Price --}}
                     <div class="mb-3">
                         <label for="totalPrice"

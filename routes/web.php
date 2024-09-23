@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerOrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierOrderController;
 use Illuminate\Support\Facades\Route;
@@ -37,3 +38,6 @@ Route::prefix('suppliers/{supplier}')->name('suppliers.')->group(function () {
 
 // SUPPLIER ORDERS
 Route::resource('supplier-orders', SupplierOrderController::class)->only(['index', 'create', 'show']);
+
+// CUSTOMER ORDERS
+Route::resource('customer-orders', CustomerOrderController::class)->only(['index', 'create', 'show']);
