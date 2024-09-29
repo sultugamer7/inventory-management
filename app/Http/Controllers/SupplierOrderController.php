@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\SupplierOrder;
+use Illuminate\Support\Facades\App;
 
 class SupplierOrderController extends Controller
 {
@@ -24,5 +25,17 @@ class SupplierOrderController extends Controller
         return view('supplier-orders.show', [
             'supplierOrder' => $supplierOrder
         ]);
+    }
+
+    public function pdf(SupplierOrder $supplierOrder)
+    {
+        $view = view('supplier-orders.pdf', [
+            'supplierOrder' => $supplierOrder
+        ])->render();
+
+        $pdf = App::make('snappy.pdf.wrapper');
+        $pdf->loadHTML($view);
+
+        return $pdf->inline();
     }
 }

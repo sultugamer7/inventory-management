@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\CustomerOrderController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\SupplierOrderController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\CustomerOrderController;
+use App\Http\Controllers\SupplierOrderController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -38,6 +39,12 @@ Route::prefix('suppliers/{supplier}')->name('suppliers.')->group(function () {
 
 // SUPPLIER ORDERS
 Route::resource('supplier-orders', SupplierOrderController::class)->only(['index', 'create', 'show']);
+Route::get('supplier-orders/{supplierOrder}/pdf', [SupplierOrderController::class, 'pdf'])->name('supplier-orders.pdf');
 
 // CUSTOMER ORDERS
 Route::resource('customer-orders', CustomerOrderController::class)->only(['index', 'create', 'show']);
+Route::get('customer-orders/{customerOrder}/pdf', [CustomerOrderController::class, 'pdf'])->name('customer-orders.pdf');
+
+// REPORTS
+Route::get('reports/supplier-orders', [ReportController::class, 'supplierOrders'])->name('reports.supplier-orders');
+Route::get('reports/customer-orders', [ReportController::class, 'customerOrders'])->name('reports.customer-orders');

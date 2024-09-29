@@ -4,28 +4,6 @@
 <div class="container">
     <div class="row">
         <div class="col-6">
-            {{-- <form action="{{ route('customers.search') }}"
-                  method="POST">
-                @csrf
-                <div class="input-group mb-3">
-                    <button class="input-group-text"
-                            id="search"
-                            type="submit">🔍</button>
-                    <input type="search"
-                           class="form-control @error('search') is-invalid @enderror"
-                           placeholder="Search by customer name, email address, phone or address..."
-                           aria-describedby="search"
-                           name="search"
-                           value="{{ request('search', null) }}">
-
-                    @error('search')
-                        <span class="invalid-feedback"
-                              role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
-            </form> --}}
         </div>
         <div class="col-6">
             <div class="text-end mb-4">

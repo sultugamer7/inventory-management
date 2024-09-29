@@ -73,5 +73,13 @@
             </strong>
         </div>
     </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-12">
+            <a href="{{ route('customer-orders.pdf', ['customerOrder' => $customerOrder->id]) }}" class="btn btn-primary">PDF</a>
+        </div>
+    </div>
 </div>
 @endsection

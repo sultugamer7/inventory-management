@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CustomerOrder;
 use Illuminate\Http\Request;
+use App\Models\CustomerOrder;
+use Illuminate\Support\Facades\App;
 
 class CustomerOrderController extends Controller
 {
@@ -24,5 +25,22 @@ class CustomerOrderController extends Controller
         return view('customer-orders.show', [
             'customerOrder' => $customerOrder
         ]);
+    }
+
+    public function pdf(CustomerOrder $customerOrder)
+    {
+        // view render
+        $view = view('customer-orders.pdf', [
+            'customerOrder' => $customerOrder
+        ])->render();
+
+        // pdf wrapper load
+        $pdf = App::make('snappy.pdf.wrapper');
+
+        // rendered view to be loaded as HTML
+        $pdf->loadHTML($view);
+
+        // pdf return inline
+        return $pdf->inline();
     }
 }
